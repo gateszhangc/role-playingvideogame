@@ -7,7 +7,6 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     cert-manager.io/issue-temporary-certificate: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
@@ -17,6 +16,16 @@ spec:
         - www.role-playingvideogame.lol
   rules:
     - host: role-playingvideogame.lol
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: role-playingvideogame
+                port:
+                  number: 80
+    - host: www.role-playingvideogame.lol
       http:
         paths:
           - path: /
