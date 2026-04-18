@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: role-playingvideogame
+  namespace: argocd
+spec:
+  project: role-playingvideogame
+  source:
+    repoURL: https://github.com/gateszhangc/role-playingvideogame.git
+    targetRevision: main
+    path: deploy/k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: role-playingvideogame
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,11 +1,11 @@
 {
-  "name": "Artemis II Wallpaper",
-  "short_name": "Artemis II",
-  "description": "Independent editorial collection of Artemis II wallpapers using publicly released NASA imagery with source credit.",
+  "name": "Role-Playing Video Game Guide",
+  "short_name": "Quest Atlas",
+  "description": "Editorial guide to the role-playing video game genre, its systems, and starter paths.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#050912",
-  "theme_color": "#050912",
+  "background_color": "#121714",
+  "theme_color": "#121714",
   "icons": [
     {
       "src": "/assets/brand/favicon.png",

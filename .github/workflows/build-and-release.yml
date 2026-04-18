@@ -7,19 +7,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: artemis-2-wallpaper-release
+  group: role-playingvideogame-release
   cancel-in-progress: true
-
-env:
-  IMAGE_NAME: registry.144.91.77.245.sslip.io/dokploy-fleet-artemis-2-wallpaper-artemis-2-wallpaper
-  FLEET_REPO: gateszhangc/k8s-fleet
-  FLEET_TENANT_PATH: tenants/artemis-2-wallpaper/20-artemis-2-wallpaper-deployment.yaml
 
 jobs:
   build-and-push:
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.meta.outputs.image_tag }}
@@ -47,52 +43,50 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.image_tag }}
+          tags: registry.144.91.77.245.sslip.io/role-playingvideogame:${{ steps.meta.outputs.image_tag }}
 
-  update-fleet:
+  update-gitops-tag:
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip ci]')
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Check out fleet repo
+      - name: Check out code
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.FLEET_REPO }}
-          token: ${{ secrets.FLEET_REPO_PAT }}
-          path: k8s-fleet
+          fetch-depth: 0
 
-      - name: Update deployment image tag
+      - name: Update image tag
         env:
           IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
         run: |
           python3 - <<'PY'
           import os
-          import re
           from pathlib import Path
+          import re
 
-          path = Path("k8s-fleet") / os.environ["FLEET_TENANT_PATH"]
+          path = Path("deploy/k8s/overlays/prod/kustomization.yaml")
           content = path.read_text()
           updated, count = re.subn(
-              r"(^\s*image:\s*registry\.144\.91\.77\.245\.sslip\.io/dokploy-fleet-artemis-2-wallpaper-artemis-2-wallpaper:).*$",
-              rf"\1{os.environ['IMAGE_TAG']}",
+              r"(^\s*newTag:\s*).*$",
+              lambda match: f"{match.group(1)}{os.environ['IMAGE_TAG']}",
               content,
               count=1,
               flags=re.MULTILINE,
           )
           if count != 1:
-              raise SystemExit("Expected exactly one image line to update in the fleet deployment manifest.")
+              raise SystemExit("expected a single newTag entry in kustomization.yaml")
           path.write_text(updated)
           PY
 
-      - name: Commit fleet update
+      - name: Commit manifest update
         env:
           IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
         run: |
-          cd k8s-fleet
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$FLEET_TENANT_PATH"
-          if git diff --cached --quiet; then
+          if git diff --quiet -- deploy/k8s/overlays/prod/kustomization.yaml; then
             exit 0
           fi
-          git commit -m "chore: release artemis-2-wallpaper ${IMAGE_TAG}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deploy/k8s/overlays/prod/kustomization.yaml
+          git commit -m "chore: release ${IMAGE_TAG} [skip ci]"
           git push origin HEAD:main

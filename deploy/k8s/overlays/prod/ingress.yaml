@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: role-playingvideogame
+  annotations:
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/issue-temporary-certificate: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - secretName: role-playingvideogame-live-tls
+      hosts:
+        - role-playingvideogame.lol
+        - www.role-playingvideogame.lol
+  rules:
+    - host: role-playingvideogame.lol
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: role-playingvideogame
+                port:
+                  number: 80

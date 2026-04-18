@@ -1,9 +1,10 @@
 {
-  "name": "artemis-2-wallpaper",
+  "name": "role-playingvideogame",
   "version": "1.0.0",
   "private": true,
-  "description": "Static Artemis II wallpaper site built from publicly released NASA imagery.",
+  "description": "Static editorial guide for the role-playing video game genre.",
   "scripts": {
+    "generate:assets": "python3 scripts/generate_brand_assets.py",
     "start": "node server.js",
     "test": "playwright test",
     "test:browser": "playwright test"

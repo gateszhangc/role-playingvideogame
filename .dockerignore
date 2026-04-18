@@ -1,10 +1,9 @@
 .git
 .github
+.next
 node_modules
-playwright-report
+coverage
+dist
+build
 test-results
-tasks
-brand
-scripts
-tests
-npm-debug.log*
+playwright-report
