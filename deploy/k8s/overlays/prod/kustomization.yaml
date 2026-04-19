@@ -7,4 +7,4 @@ resources:
   - ingress.yaml
 images:
   - name: registry.144.91.77.245.sslip.io/role-playingvideogame
-    newTag: f0c79e9a0c02315374139687d8c0644e74357c2b
+    newTag: 08d7abed0843f2b72bd10da2a78cc2121e5bb9a8
