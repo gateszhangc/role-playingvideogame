@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: cloudflare-api-token
+  namespace: role-playingvideogame
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  encryptedData:
+    api-token: AgBYmwZdj43bTbK6TnZZsoIhdIggNLOmqQGDMOEjemlhB6NF2bvfc1YrFODs+LQIIxwcuyi8lB5C08FugWcMsR4dXW2jxs5za1WJtc5pTTMXALSmiGIeSQiLaiLNhZ16xveNv7BnwNuy6VxaXxhZjuM4fR9MphPu/IrWv5+S54D00iLc06hnbChNbyXySMBiNex2VZWJJA1a/NLIbxEkvLAat1QZaXa9THW91xDUTKbp+az0f1qC5M3FuOBa6DovymoO5CrrKS1Aa3/QSz1gyYkHbARcMcmHv5etEYAbLkaU58uP/4baBQVaqRJ6b9QIZapBcWim3MGiXJl4LPCSDBtUXc5V/UANJzyYtvLkT2rQ2Ed600yMAhLwOW/TWNARs8wmUN2aQcnQSHBhXMTuVpfYMZFPw/c+LebCbx0aBeW+FpSOfCRxWJXpJLkJ1+/AhpD84CV9FKYmv7hwFWcPBwNykE6cIE+HWH/FBNDoSHbxfiKRGFBill8oIP5t3E6yhjT38bA8f5qUV9If6haLfhgoT7uLHduDzm6enAFQV1bB4U8C16hIR5ExKJ7NvzUTlvOHrVSsWJYBbuDw+hfv6/hQzykxXBCSK5V3mI3xpft5gsL3K3mswE3B/Rj0umx4lKyGAafjdgR1sDOcDHfcGSu1ICuisGn8ARtYNVyveBLnNK4778W8zy7+LmeI/n8u6e7g5sVHsvV51Y9O01FlvdDwEsqfQKvcBx2hLN3nRBi2kXkBWUmyjTP4
+  template:
+    metadata:
+      name: cloudflare-api-token
+      namespace: role-playingvideogame
+    type: Opaque
